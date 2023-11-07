@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 20:07:20 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/07 11:37:54 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/07 22:17:32 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,97 +102,121 @@ int	check_file_exist(t_redirect_s *redirect_s)
 	return (0);
 }
 
+void	set_exit_status(t_bundle *bundle)
+{
+	int	exit_result;
+	int	finished_pid;
+
+	finished_pid = wait(&exit_result);
+	if (finished_pid == bundle->last_pid)
+	{
+		if (WIFSIGNALED(exit_result))
+			exit_status = 128 + WTERMSIG(exit_result);
+		else
+			exit_status = WEXITSTATUS(exit_result);
+	}
+}
+
+void	exec_command(t_bundle *bundle, t_pipe *root)
+{
+	int	idx;
+
+	idx = -1;
+	if (pre_exec_here_doc(root, bundle) == -1)
+		return ;
+	exec_recur(root, bundle, -1, 0);
+	signal(SIGINT, sigint_handler_during_fork);
+	signal(SIGQUIT, sigquit_handler_during_fork);
+	while (++idx < bundle->cmd_cnt)
+		set_exit_status(bundle);
+	if (bundle->cmd_cnt == 0)
+		set_exit_status(bundle);
+}
+
+int	exec_tree(t_bundle *bundle, t_pipe *root)
+{
+	if (!root)
+		return (-1);
+	if (check_one_cmd_and_builtin(root) == 1)
+	{
+		if (exec_one_builtin(bundle, root) == -1)
+			return (-1);
+		return (0);
+	}
+	else
+		exec_command(bundle, root);
+	return (0);
+}
+
+void	ctrl_d_handler()
+{
+	write(1, "exit\n", 5);
+	exit(0);
+}
+
+int	exec_one_builtin(t_bundle *bundle, t_pipe *root)
+{
+	int			before_stdin;
+	int			before_stdout;
+
+	if (root->cmd->redirect_s)
+	{
+		before_stdin = dup(STDIN_FILENO);
+		before_stdout = dup(STDOUT_FILENO);
+		if (pre_exec_here_doc(root, bundle) == -1)
+		{
+			dup2(before_stdin, STDIN_FILENO);
+			dup2(before_stdout, STDOUT_FILENO);
+			return (-1);
+		}
+		exec_redirect_s_recur(root->cmd->redirect_s, bundle);
+	}
+	exit_status = exec_builtin(root->cmd->simple_cmd->cmd_path,
+			root->cmd->simple_cmd->cmd_argv, bundle);
+	if (root->cmd->redirect_s)
+	{
+		dup2(before_stdin, STDIN_FILENO);
+		dup2(before_stdout, STDOUT_FILENO);
+	}
+	return (0);
+}
+
+void	setting(int argc, char *argv[], t_bundle *bundle, char *envp[])
+{
+	(void)argc;
+	(void)argv;
+	cp_envp(bundle, envp);
+	rl_catch_signals = 0;
+}
+
 int main(int argc, char *argv[], char *envp[])
 {
 	char		*inp;
 	t_pipe		*root;
 	t_bundle	bundle;
-	int			idx;
-	int			before_stdin;
-	int			before_stdout;
-	int			exit_result;
-	int			finished_pid;
 
-	(void)argc;
-	(void)argv;
-	//atexit(leaks);
-
-	cp_envp(&bundle, envp);
-	rl_catch_signals = 0;
+	setting(argc, argv, &bundle, envp);
 	while (1)
 	{
 		init_bundle(&bundle);
-		idx = -1;
 		printf("exit status : %d\n", exit_status);
 		inp = readline("ϞϞ(๑⚈ ․̫ ⚈๑) > ");
 		if (!inp)
-		{
-			write(1, "exit\n", 5);
-			exit(0);
-		}
+			ctrl_d_handler();
 		if (!*inp)
+		{
+			free(inp);
 			continue ;
+		}
 		add_history(inp);
 		root = parsing(&bundle, inp);
 		free(inp);
-		if (!root)
+		if (exec_tree(&bundle, root) == -1)
 			continue ;
-		if (check_one_cmd_and_builtin(root) == 1)
-		{
-			if (root->cmd->redirect_s)
-			{
-				before_stdin = dup(STDIN_FILENO);
-				before_stdout = dup(STDOUT_FILENO);
-				if (pre_exec_here_doc(root, &bundle) == -1)
-				{
-					printf("here3\n"); //
-					dup2(before_stdin, STDIN_FILENO);
-					dup2(before_stdout, STDOUT_FILENO);
-					continue ;
-				}
-				exec_redirect_s_recur(root->cmd->redirect_s, &bundle);
-			}
-			exit_status = exec_builtin(root->cmd->simple_cmd->cmd_path, root->cmd->simple_cmd->cmd_argv, &bundle);
-			if (root->cmd->redirect_s)
-			{
-				dup2(before_stdin, STDIN_FILENO);
-				dup2(before_stdout, STDOUT_FILENO);
-			}
-		}
-		else
-		{
-			if (pre_exec_here_doc(root, &bundle) != -1)
-			{
-				exec_recur(root, &bundle, -1, 0);
-				signal(SIGINT, sigint_handler_during_fork);
-				signal(SIGQUIT, sigquit_handler_during_fork);
-				while (++idx < bundle.cmd_cnt)
-				{
-					finished_pid = wait(&exit_result);
-					if (finished_pid == bundle.last_pid)
-					{
-						if (WIFSIGNALED(exit_result))
-							exit_status = 128 + WTERMSIG(exit_result);
-						else
-							exit_status = WEXITSTATUS(exit_result);
-					}
-				}
-				if (bundle.cmd_cnt == 0)
-				{
-					finished_pid = wait(&exit_result);
-					if (WIFSIGNALED(exit_result))
-						exit_status = 128 + WTERMSIG(exit_result);
-					else
-						exit_status = WEXITSTATUS(exit_result);
-
-				}
-			}
-		}
 		free_hrdc_nodes(&bundle);
 		free_tree(root);
 	}
-	free_bundle(&bundle);
-	return (0);
+	return (free_bundle(&bundle));
 }
 
 //1. if child process has an error, main should export $? equals to child process exit status

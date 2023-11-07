@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 14:48:13 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/06 12:41:47 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/07 22:16:37 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,11 @@ void	free_redirect(t_redirect *redirect);
 t_list_hrdc	*ft_lstnew_hrdc(void);
 void	ft_lstadd_back_hrdc(t_list_hrdc **lst, t_list_hrdc *new);
 void	free_token(t_token *token);
-void	free_bundle(t_bundle *bundle);
+int	free_bundle(t_bundle *bundle);
+int	check_file_exist(t_redirect_s *redirect_s);
+int	exec_one_builtin(t_bundle *bundle, t_pipe *root);
+void	ctrl_d_handler();
+int	exec_tree(t_bundle *bundle, t_pipe *root);
 int	check_file_exist(t_redirect_s *redirect_s);
 
 
