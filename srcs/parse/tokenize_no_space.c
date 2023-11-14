@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_no_space.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 16:18:40 by hgu               #+#    #+#             */
-/*   Updated: 2023/10/31 21:06:30 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/07 20:07:39 by hgu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ void	make_token(char *str, int len, int type, t_token **head)
 	new = malloc(sizeof(t_token)); //새로만들 토큰을 말록해준다
 	new->next = NULL; //new의 next는 NULL이다
 	new->type = type; //새로만든 노드의 타입지정
+	new->expansion_cnt = 0;//1105
+	new->quote_end = -1;//1105
+	new->quote_start = -1;//1105
+	new->expansion_fail = NULL;
 	if (*head == NULL) //head가 비어있으면
 	{
 		*head = new; //새로만든 노드를 헤드에 할당한다

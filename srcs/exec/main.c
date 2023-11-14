@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 20:07:20 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/08 22:29:45 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 19:19:30 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ t_pipe	*parsing(t_bundle *bundle, char *rl)
 		write(2, "syntax error\n", 13);
 		return (NULL);
 	}
+	expansion_main(token_head, bundle);
 	root = make_tree(token_head, bundle);
 	free_token(token_head);
 	return (root);
@@ -84,7 +85,8 @@ int	exec_one_builtin(t_bundle *bundle, t_pipe *root)
 			dup2(before_stdout, STDOUT_FILENO);
 			return (-1);
 		}
-		exec_redirect_s_recur(root->cmd->redirect_s, bundle);
+		if (exec_redirect_s_recur(root->cmd->redirect_s, bundle) == -1)
+			return (-1);
 	}
 	g_exit_status = exec_builtin(root->cmd->simple_cmd->cmd_path,
 			root->cmd->simple_cmd->cmd_argv, bundle);

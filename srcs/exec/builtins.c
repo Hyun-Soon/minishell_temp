@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 21:11:37 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/08 22:18:22 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 20:34:35 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,11 @@ int	echo(char **cmd_argv)
 	idx = n_flag;
 	while (cmd_argv[++idx])
 	{
-		if (write(STDOUT_FILENO, cmd_argv[idx], ft_strlen(cmd_argv[idx])) == -1
-			|| write(STDOUT_FILENO, " ", 1) == -1)
+		if (write(STDOUT_FILENO, cmd_argv[idx], ft_strlen(cmd_argv[idx])) == -1)
 			return (err_in_echo());
+		if (cmd_argv[idx + 1])
+			if (write(STDOUT_FILENO, " ", 1) == -1)
+				return (err_in_echo());
 	}
 	if (!n_flag)
 	{

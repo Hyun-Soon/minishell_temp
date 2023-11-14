@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_analysis.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:50:39 by hgu               #+#    #+#             */
-/*   Updated: 2023/10/17 21:05:42 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/03 22:07:20 by hgu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minishell.h"
+#include "../../headers/minishell.h"
 
 int	syntax_error(char *str)  //출력할 오류문구를 입력받아 출력하고, -1리턴
 {
@@ -34,7 +34,7 @@ int	syntax_first_token(t_token *first, int cnt)
 	// }
 	if (first->next == NULL) //2번째 파이프부터 파이프 -> NULL의 꼴이면
 		return (syntax_error("|"));
-	else if (first->next->type == -1) //다음이 word이면
+	else if (first->next->type <= 1 ) //다음이 word이면
 		return (1);//정상
 	else if (first->next->type >= REDIR_LEFT && first->next->type <= REDIR_TWO_RIGHT) //다음이 리다이렉트이면 정상
 		return (1);
@@ -69,7 +69,9 @@ t_token	*syntax_analyze(t_token *token_head)
 	t_token	*tmp;
 	int		cnt;
 
-	tmp = token_head; //토큰의 헤드는 pipe타입이다
+	tmp = token_head; //토큰의 헤드는 pipe타입이다 //quote가 닫히지 않으면 NULL포인터가 들어온다
+	if (tmp == NULL)
+		return (NULL);
 	cnt = 0;
 	while (tmp != NULL)
 	{

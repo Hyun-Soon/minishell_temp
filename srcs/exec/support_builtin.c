@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 22:13:46 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/08 22:28:03 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 20:16:30 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,5 @@ void	rm_inp_env_var(t_bundle *bundle, int found_idx)
 	free(bundle->envp);
 	bundle->envp = ret_envp;
 	bundle->envp_len--;
+	bundle->envp[bundle->envp_len] = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 20:38:59 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/08 20:39:32 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 15:19:48 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	base_redir_first_cmd(t_bundle *bundle)
 {
-	if (bundle->cmd_cnt > 1)
+	if (bundle->current->pipe)
 		if (dup2(bundle->fd[1], STDOUT_FILENO) == -1)
 			ft_error(DUP2_ERRMSG, 1);
 	if (close(bundle->fd[0]) == -1)

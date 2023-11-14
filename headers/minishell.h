@@ -6,9 +6,10 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 14:48:13 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/08 22:28:32 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 18:08:46 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -50,14 +51,32 @@ typedef struct s_list_hrdc
 	struct s_list_hrdc	*next;
 }				t_list_hrdc;
 
+// typedef struct s_bundle
+// {
+// 	char		**envp; //hyuim : free해줘야함
+// 	int			envp_len;
+// 	t_list		*hrdc_filename_list; //if it remains free at last
+// 	t_list		*current_filename;
+// 	t_list_hrdc	*hrdc_cnt_list;
+// 	t_list_hrdc	*current_cnt;
+// 	int			fd[2];
+// 	char		*err_msg; //err msg for "command not found", "No such file or directory", "is a directory"
+// 	int			err_flag;
+// 	int			cmd_cnt;
+// 	int			last_pid;
+// 	//struct termios new_term;
+// }				t_bundle;
+
 typedef struct s_token
 {
 	int				type;
-	int				quote_start;
-	int				quote_end;
-	int				expansion_cnt;
-	int				expansion_idx;
+	int				quote_start; //1105
+	int				quote_end; //1105
+	int				expansion_cnt; //1105
+	int				expansion_idx;//1105 확장이 끝난 지점의 바로 다음 idx반환
+	int				flag; //확장시 ""안에서 확장하는지 여부를 저장할 플래그
 	char			*value;
+	char			*expansion_fail;
 	struct s_token	*next;
 }				t_token;
 
@@ -70,10 +89,10 @@ typedef struct s_simple_cmd
 
 typedef struct s_redirect
 {
-	int		type;
-	int		token_cnt;
-	char	*filename;
-}				t_redirect;
+    int     type;
+    int     token_cnt; //extention 한 결과에서 (공백 + 1) 만큼저장 //"$a"의 경우에는 사용하지 않는다 //split.c의 단어개수새는 함수에 ' '를 인자로 넣어서 카운트
+    char    *filename; //입력받은 실제 파일이름
+}               t_redirect;
 
 typedef struct s_redirect_s
 {
@@ -91,6 +110,7 @@ typedef struct s_pipe
 {
 	t_cmd			*cmd;
 	struct s_pipe	*pipe;
+	int				flag;
 }				t_pipe;
 
 typedef struct s_bundle
@@ -117,14 +137,14 @@ int			exec_recur(t_pipe *root,
 				t_bundle *bundle, int before_fd_read, int cmd_idx);
 int			exec_cmd(t_cmd *cmd, t_bundle *bundle,
 				int before_fd_read, int cmd_idx);
-void		exec_redirect_s_recur(t_redirect_s *redirect_s, t_bundle *bundle);
-void		exec_redirect(t_redirect *redirect, t_bundle *bundle);
+int		exec_redirect_s_recur(t_redirect_s *redirect_s, t_bundle *bundle);
+int		exec_redirect(t_redirect *redirect, t_bundle *bundle);
 void		exec_simple_cmd(t_simple_cmd *simple_cmd, t_bundle *bundle,
 				int idx);
-void		redir_left(char *filename);
-void		redir_right(char *filename);
-void		redir_two_left(t_bundle *bundle);
-void		redir_two_right(char *filename);
+int		redir_left(char *filename);
+int		redir_right(char *filename);
+int		redir_two_left(t_bundle *bundle);
+int		redir_two_right(char *filename);
 char		**get_path(char **envp);
 void		free_2d_malloced_str(char **str_arr);
 void		base_redir_first_cmd(t_bundle *bundle);
@@ -196,19 +216,26 @@ int			err_in_echo(void);
 int			err_in_cd(char *dest);
 void		err_in_export(char *str);
 
-t_token		*syntax_analyze(t_token *token_head);
-t_pipe		*make_tree(t_token *token_head, t_bundle *bundle);
-t_token		*free_all_token(t_token *token_head);
-t_token		*tokenize(char *str);
-int			jump_quote(char *s, int idx);
-int			check_ch_is_token(char *str);
-void		make_token(char *str, int len, int type, t_token **head);
-t_token		*free_all_token(t_token *token_head);
-void		make_redirect_s(t_redirect_s **head, t_token *token);
-t_redirect	*make_redirect(t_token *token);
-t_pipe		*make_pipe(void);
-t_cmd		*make_cmd(void);
-void		make_simple_cmd(t_cmd *cmd, t_token *token, t_bundle *bundle);
-void		copy_strings(char **new, char **old, int cnt);
 
+
+t_token	*syntax_analyze(t_token *token_head);
+t_pipe	*make_tree(t_token *token_head, t_bundle *bundle);
+t_token	*free_all_token(t_token *token_head);
+t_token	*tokenize(char *str);
+int	jump_quote(char *s, int idx);
+int	check_ch_is_token(char *str);
+void	make_token(char *str, int len, int type, t_token **head);
+t_token	*free_all_token(t_token *token_head);
+void	make_redirect_s(t_redirect_s **head, t_token *token, t_pipe *pipe, t_bundle *bundle);
+t_redirect	*make_redirect(t_token *token, t_pipe *pipe);
+t_pipe	*make_pipe(void);
+t_cmd	*make_cmd(void);
+void	make_simple_cmd(t_cmd *cmd, t_token *token, t_bundle *bundle);
+void	copy_strings(char **new, char **old, int cnt);
+void	print_tree(t_pipe *node, t_bundle *bundle);
+void	error_pipe(t_pipe *pipe, t_bundle *bundle);
+void	delete_quote_after_expansion(t_token *token); //1105
+char	*new_cut_quote(int open, int close, char *target);//1105
+t_token	*expansion_main(t_token *head, t_bundle *bundle);//1105
+void	delete_quote(t_token *tk);//1105
 #endif

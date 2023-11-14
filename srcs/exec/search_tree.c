@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 21:19:25 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/08 21:18:51 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 20:18:05 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ int	exec_cmd(t_cmd *cmd, t_bundle *bundle, int before_fd_read, int cmd_idx)
 	else
 		base_redir_mid_cmd(bundle, before_fd_read);
 	if (cmd->redirect_s)
-		exec_redirect_s_recur(cmd->redirect_s, bundle);
+		if (exec_redirect_s_recur(cmd->redirect_s, bundle) == -1)
+			exit(1);
 	if (bundle->cmd_cnt == 0)
 		exit(0);
 	if (!bundle->err_flag && cmd->simple_cmd->cmd_path)
@@ -74,12 +75,15 @@ int	exec_cmd(t_cmd *cmd, t_bundle *bundle, int before_fd_read, int cmd_idx)
 	exit(0);
 }
 
-void	exec_redirect_s_recur(t_redirect_s *redirect_s, t_bundle *bundle)
+int	exec_redirect_s_recur(t_redirect_s *redirect_s, t_bundle *bundle)
 {
 	if (redirect_s && redirect_s->redirect)
-		exec_redirect(redirect_s->redirect, bundle);
+		if (exec_redirect(redirect_s->redirect, bundle) == -1)
+			return (-1);
 	if (redirect_s && redirect_s->redirect_s)
-		exec_redirect_s_recur(redirect_s->redirect_s, bundle);
+		if (exec_redirect_s_recur(redirect_s->redirect_s, bundle) == -1)
+			return (-1);
+	return (0);
 }
 
 void	exec_simple_cmd(t_simple_cmd *simple_cmd, t_bundle *bundle, int idx)
