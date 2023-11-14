@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 20:07:20 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 19:19:30 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 20:46:31 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	exec_one_builtin(t_bundle *bundle, t_pipe *root)
 	return (0);
 }
 
-int main(int argc, char *argv[], char *envp[])
+int	main(int argc, char *argv[], char *envp[])
 {
 	char		*inp;
 	t_pipe		*root;
@@ -108,7 +108,6 @@ int main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		init_bundle(&bundle);
-		printf("exit status : %d\n", g_exit_status); ////////////////////////
 		inp = readline("ϞϞ(๑⚈ ․̫ ⚈๑) > ");
 		if (!inp)
 			ctrl_d_handler();

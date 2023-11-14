@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 21:35:15 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 20:35:31 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 20:45:45 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,11 @@ void	exec_command(t_bundle *bundle, t_pipe *root)
 		exec_recur(root, bundle, -1, 0);
 	signal(SIGINT, sigint_handler_during_fork);
 	signal(SIGQUIT, sigquit_handler_during_fork);
-	if (root && root->cmd && root->cmd->simple_cmd->cmd_path && ft_strlen(root->cmd->simple_cmd->cmd_path) >= ft_strlen("./minishell") && ft_strncmp(root->cmd->simple_cmd->cmd_path, "./minishell", ft_strlen("./minishell")) == 0)
+	if (root && root->cmd && root->cmd->simple_cmd->cmd_path
+		&& ft_strlen(root->cmd->simple_cmd->cmd_path)
+		>= ft_strlen("./minishell")
+		&& ft_strncmp(root->cmd->simple_cmd->cmd_path,
+			"./minishell", ft_strlen("./minishell")) == 0)
 		signal(SIGQUIT, sigquit_handler_for_another_minishell);
 	if (bundle->cmd_cnt >= 1 || bundle->fork_cnt != 0)
 		while (++idx < bundle->fork_cnt)

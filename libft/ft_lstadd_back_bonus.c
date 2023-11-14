@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:09:01 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/07 19:26:10 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 20:44:07 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	ft_lstadd_back(t_list **lst, t_list *new)
 {
 	t_list	*temp;
+
 	if (!*lst)
 	{
 		*lst = new;
