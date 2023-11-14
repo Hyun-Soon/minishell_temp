@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 14:48:13 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 20:43:29 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 21:55:27 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,7 @@ int			exec_cmd(t_cmd *cmd, t_bundle *bundle,
 				int before_fd_read, int cmd_idx);
 int			exec_redirect_s_recur(t_redirect_s *redirect_s, t_bundle *bundle);
 int			exec_redirect(t_redirect *redirect, t_bundle *bundle);
-void		exec_simple_cmd(t_simple_cmd *simple_cmd, t_bundle *bundle,
-				int idx);
+void		exec_simple_cmd(t_simple_cmd *simple_cmd, t_bundle *bundle);
 int			redir_left(char *filename);
 int			redir_right(char *filename);
 int			redir_two_left(t_bundle *bundle);
@@ -198,6 +197,8 @@ int			print_declare_env(char **str_arr);
 int			err_in_echo(void);
 int			err_in_cd(char *dest);
 void		err_in_export(char *str);
+void		exec_with_new_path(char **parsed_path,
+				int idx, t_simple_cmd *simple_cmd, t_bundle *bundle);
 
 t_token		*syntax_analyze(t_token *token_head);
 t_pipe		*make_tree(t_token *token_head, t_bundle *bundle);

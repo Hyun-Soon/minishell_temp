@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 21:19:25 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 20:18:05 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 21:55:42 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	exec_cmd(t_cmd *cmd, t_bundle *bundle, int before_fd_read, int cmd_idx)
 	if (bundle->cmd_cnt == 0)
 		exit(0);
 	if (!bundle->err_flag && cmd->simple_cmd->cmd_path)
-		exec_simple_cmd(cmd->simple_cmd, bundle, -1);
+		exec_simple_cmd(cmd->simple_cmd, bundle);
 	exit(0);
 }
 
@@ -86,11 +86,9 @@ int	exec_redirect_s_recur(t_redirect_s *redirect_s, t_bundle *bundle)
 	return (0);
 }
 
-void	exec_simple_cmd(t_simple_cmd *simple_cmd, t_bundle *bundle, int idx)
+void	exec_simple_cmd(t_simple_cmd *simple_cmd, t_bundle *bundle)
 {
 	char	**parsed_path;
-	char	*temp;
-	char	*new_path;
 
 	if (is_builtin(simple_cmd->cmd_path))
 		exit(exec_builtin(simple_cmd->cmd_path, simple_cmd->cmd_argv, bundle));
@@ -101,16 +99,7 @@ void	exec_simple_cmd(t_simple_cmd *simple_cmd, t_bundle *bundle, int idx)
 	parsed_path = get_path(bundle->envp);
 	if (!parsed_path)
 		print_cmd_not_found_err(simple_cmd);
-	while (parsed_path[++idx])
-	{
-		temp = ft_strjoin(parsed_path[idx], "/");
-		new_path = ft_strjoin(temp, simple_cmd->cmd_path);
-		free(temp);
-		if (!access(new_path, F_OK))
-			if (execve(new_path, simple_cmd->cmd_argv, bundle->envp) == -1)
-				select_err_msg(simple_cmd->cmd_path);
-		free(new_path);
-	}
+	exec_with_new_path(parsed_path, -1, simple_cmd, bundle);
 	free_2d_malloced_str(parsed_path);
 	select_err_msg(simple_cmd->cmd_path);
 }

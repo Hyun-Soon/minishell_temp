@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 21:35:15 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 20:45:45 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/14 21:56:35 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,26 @@ void	exec_command(t_bundle *bundle, t_pipe *root)
 		set_exit_status(bundle);
 	if (root && !(root->cmd))
 		g_exit_status = 1;
+}
+
+void	exec_with_new_path(char **parsed_path,
+			int idx, t_simple_cmd *simple_cmd, t_bundle *bundle)
+{
+	char	*temp;
+	char	*new_path;
+
+	while (parsed_path[++idx])
+	{
+		temp = ft_strjoin(parsed_path[idx], "/");
+		if (!temp)
+			ft_error(MALLOC_ERRMSG, 1);
+		new_path = ft_strjoin(temp, simple_cmd->cmd_path);
+		if (!new_path)
+			ft_error(MALLOC_ERRMSG, 1);
+		free(temp);
+		if (!access(new_path, F_OK))
+			if (execve(new_path, simple_cmd->cmd_argv, bundle->envp) == -1)
+				select_err_msg(simple_cmd->cmd_path);
+		free(new_path);
+	}
 }
