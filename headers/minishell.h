@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 14:48:13 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/15 15:07:50 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/15 15:31:47 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,12 +217,31 @@ void		make_simple_cmd(t_cmd *cmd, t_token *token, t_bundle *bundle);
 void		copy_strings(char **new, char **old, int cnt);
 void		print_tree(t_pipe *node, t_bundle *bundle);
 void		error_pipe(t_pipe *pipe, t_bundle *bundle);
-void		delete_quote_after_expansion(t_token *token); //1105
-char		*new_cut_quote(int open, int close, char *target);//1105
-t_token		*expansion_main(t_token *head, t_bundle *bundle);//1105
-void		delete_quote(t_token *tk);//1105
+void		delete_quote_after_expansion(t_token *token);
+char		*new_cut_quote(int open, int close, char *target);
+t_token		*expansion_main(t_token *head, t_bundle *bundle);
+void		delete_quote(t_token *tk);
 void		del_quote_before_close_quote(t_token *token,
 				int *close_quote, int idx, char ch);
 void		find_close_quote_with_dollar(t_token *token, int *close_quote);
+int			expansion_separator(char ch);
+int			case_find_in_envp(t_token *token, char *envp, int start, int cut);
+void		case_not_find_in_envp(t_token *token, int start, int cut);
+void		check_expansion_cnt(t_token *token);
+int			check_dollar(t_token *token, int idx, t_bundle *bundle);
+char		*delete_only_dollar(char *value, int dollar);
+int			dollar_with_dollar(t_token *token, int idx);
+int			dollar_with_question_mark(t_token *token, int idx);
+int			dollar_with_separator(t_token *token, int idx);
+int			dollar_with_quote(t_token *token, int close_quote);
+void		del_quote_before_close_quote(t_token *token,
+				int *close_quote, int idx, char ch);
+char		*new_cut_quote(int open, int close, char *target);
+void		set_del_quote_value(t_token *token, int *idx, int *start, char *ch);
+char		*del_quote(t_token *token, char *tmp, int start, int *quote_cnt);
+int			cut_env_idx(t_token *token, char *value, int idx);
+char		*insert_envp(t_token *token, char *tmp, char *str, int start);
+int			new_expand(t_token *token, int start, int cut, t_bundle *bundle);
+void		split_after_expansion(t_token *token, char *str, char *new);
 
 #endif
