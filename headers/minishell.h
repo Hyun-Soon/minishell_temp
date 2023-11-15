@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 14:48:13 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 21:55:27 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/15 15:07:50 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ void		exec_with_new_path(char **parsed_path,
 				int idx, t_simple_cmd *simple_cmd, t_bundle *bundle);
 
 t_token		*syntax_analyze(t_token *token_head);
-t_pipe		*make_tree(t_token *token_head, t_bundle *bundle);
+t_pipe		*make_tree(t_bundle *bundle, t_token *tmp);
 t_token		*free_all_token(t_token *token_head);
 t_token		*tokenize(char *str);
 int			jump_quote(char *s, int idx);
@@ -221,4 +221,8 @@ void		delete_quote_after_expansion(t_token *token); //1105
 char		*new_cut_quote(int open, int close, char *target);//1105
 t_token		*expansion_main(t_token *head, t_bundle *bundle);//1105
 void		delete_quote(t_token *tk);//1105
+void		del_quote_before_close_quote(t_token *token,
+				int *close_quote, int idx, char ch);
+void		find_close_quote_with_dollar(t_token *token, int *close_quote);
+
 #endif

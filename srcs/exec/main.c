@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 20:07:20 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 20:49:13 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/15 15:03:41 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ t_pipe	*parsing(t_bundle *bundle, char *rl)
 	t_token	*token_head;
 	t_token	*temp;
 	t_pipe	*root;
+	t_token	*make_tree_tmp;
 
 	token_head = tokenize(rl);
 	temp = syntax_analyze(token_head);
@@ -47,7 +48,8 @@ t_pipe	*parsing(t_bundle *bundle, char *rl)
 		return (NULL);
 	}
 	expansion_main(token_head, bundle);
-	root = make_tree(token_head, bundle);
+	make_tree_tmp = token_head->next;
+	root = make_tree(bundle, make_tree_tmp);
 	free_token(token_head);
 	return (root);
 }
