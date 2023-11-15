@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 13:51:10 by hgu               #+#    #+#             */
-/*   Updated: 2023/11/15 15:30:31 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/15 15:34:35 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ t_token	*delete_empty_token(t_token *head)
 		return (free_all_token(head));
 	while (now != NULL)
 	{
-
 		if (now->value[0] == '\0' && !(bef->type == PIPE || \
 		(bef->type >= 7 && bef->type <= 10) \
 		|| (!ft_strncmp(bef->value, "cat", 3) && !now->expansion_fail)))

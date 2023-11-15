@@ -6,7 +6,7 @@
 #    By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/05 15:14:10 by hyuim             #+#    #+#              #
-#    Updated: 2023/11/15 15:29:50 by hyuim            ###   ########.fr        #
+#    Updated: 2023/11/15 15:35:59 by hyuim            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,8 @@ PARSE_SRCS_NAME = syntax_analysis.c \
 				check_condition.c \
 				handle_dollar_sign.c \
 				handle_quote.c \
-				handle_env.c
+				handle_env.c \
+				tokenizer.c
 
 EXEC_OBJS = $(EXEC_SRCS:.c=.o)
 PARSE_OBJS = $(PARSE_SRCS:.c=.o)

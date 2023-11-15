@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 14:48:13 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/15 15:31:47 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/15 15:37:27 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,5 +243,7 @@ int			cut_env_idx(t_token *token, char *value, int idx);
 char		*insert_envp(t_token *token, char *tmp, char *str, int start);
 int			new_expand(t_token *token, int start, int cut, t_bundle *bundle);
 void		split_after_expansion(t_token *token, char *str, char *new);
+t_token		*traverse_str(char *str, t_token *token_head, int *len, int *type);
+t_token		*tokenize(char *str);
 
 #endif
