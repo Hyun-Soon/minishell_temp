@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 21:19:25 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 21:55:42 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/16 11:05:58 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	exec_recur(t_pipe *root, t_bundle *bundle, int before_fd_read, int cmd_idx)
 	if (pid > 0 && root->pipe)
 		if (exec_recur(root->pipe, bundle, bundle->fd[0], cmd_idx + 1) == -1)
 			return (-1);
+	close(bundle->fd[0]);
 	close(before_fd_read);
 	return (0);
 }

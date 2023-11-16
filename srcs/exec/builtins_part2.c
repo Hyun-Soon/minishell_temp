@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 22:18:03 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/08 22:26:38 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/16 12:13:12 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ft_exit(char **cmd_argv)
 	{
 		if (write(2, "exit: too many arguments\n", 25) == -1)
 			ft_error(WRITE_ERRMSG, 1);
-		atoi_ret = 1;
+		return ;
 	}
 	else if (cmd_argv_size == 2)
 	{
@@ -50,7 +50,7 @@ void	ft_exit(char **cmd_argv)
 		{
 			if (write(2, "exit: numeric argument required\n", 33) == -1)
 				ft_error(WRITE_ERRMSG, 1);
-			atoi_ret = 1;
+			return ;
 		}
 	}
 	exit(atoi_ret);

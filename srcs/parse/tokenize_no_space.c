@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 16:18:40 by hgu               #+#    #+#             */
-/*   Updated: 2023/11/15 15:36:28 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/16 11:07:52 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,16 +99,10 @@ int	jump_quote(char *s, int idx)
 	{
 		while (s[idx + 1] && s[idx + 1] != '\'')
 			idx++;
-		if (s[idx + 1] == '\0')
-			write(2, "error1\n", 7);
 	}
 	else if (s[idx] == '\"')
-	{
 		while (s[idx + 1] && s[idx + 1] != '\"')
 			idx++;
-		if (s[idx + 1] == '\0')
-			write(2, "error2\n", 7);
-	}
 	if (s[idx + 1] == '\0')
 		return (-1);
 	return (idx + 1);
