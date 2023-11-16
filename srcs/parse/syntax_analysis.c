@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:50:39 by hgu               #+#    #+#             */
-/*   Updated: 2023/11/15 14:35:32 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/16 13:28:38 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	syntax_redirection(t_token *token)
 		tmp = tmp->next;
 		if (tmp == NULL)
 			return (syntax_error("newline"));
-		else if (tmp->type != -1)
+		else if (tmp->type > 1)
 			return (syntax_error(tmp->value));
 		tmp->type = FILENAME;
 	}

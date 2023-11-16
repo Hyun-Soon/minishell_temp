@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 14:46:25 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/15 14:47:04 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/16 14:08:30 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ t_redirect	*make_redirect(t_token *token, t_pipe *pipe)
 	if (new == NULL)
 		ft_error(MALLOC_ERRMSG, 1);
 	new->type = token->type;
-	if (token->next->value[0] == '\0')
+	if (token->next->value[0] == '\0' && token->type <= 8 && \
+	token->next->expansion_fail != NULL)
 	{
 		pipe->flag = 1;
 		free(token->next->value);

@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 15:29:34 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/15 15:30:40 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/16 14:21:52 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,7 @@ int	cut_env_idx(t_token *token, char *value, int idx)
 		if (expansion_separator(value[end_point]))
 			break ;
 		if (end_point == token->quote_end)
-		{
-			printf("cut test : %s %d\n", token->value, end_point);
 			return (end_point);
-		}
 	}
 	return (end_point - 1);
 }

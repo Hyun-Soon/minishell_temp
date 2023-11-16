@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 19:25:06 by hgu               #+#    #+#             */
-/*   Updated: 2023/11/15 15:03:42 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/16 14:21:31 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	set_pipe_node(t_token *tmp, t_pipe **pipe)
 
 void	check_err_and_make_cmd(t_bundle *bundle, t_token *tmp, t_pipe *pipe)
 {
+	free(tmp->value);
 	error_pipe(pipe, bundle);
 	if (tmp->type == PIPE)
 		pipe->cmd = make_cmd();
@@ -61,7 +62,7 @@ t_pipe	*make_tree(t_bundle *bundle, t_token *tmp)
 	pipe = pipe_head;
 	while (tmp)
 	{
-		if ((tmp->type == PIPE || tmp->next == NULL) && pipe->flag == 1)
+		if ((tmp->type == PIPE || tmp->next == NULL) && pipe->flag >= 1)
 			check_err_and_make_cmd(bundle, tmp, pipe);
 		else if (tmp->type == PIPE)
 			set_pipe_node(tmp, &pipe);
