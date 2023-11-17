@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 21:35:15 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 21:56:35 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/17 16:08:30 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	exec_tree(t_bundle *bundle, t_pipe *root)
 		if (exec_one_builtin(bundle, root) == -1)
 		{
 			g_exit_status = 1;
+			free_hrdc_nodes(bundle);
+			free_tree(root);
 			return (-1);
 		}
 		return (0);

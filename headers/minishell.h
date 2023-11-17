@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 14:48:13 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/16 11:28:08 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/17 15:53:04 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 # include "../libft/libft.h"
 # include <signal.h>
 # include <termios.h>
+# include <sys/stat.h>
 
 int	g_exit_status;
 
@@ -58,6 +59,7 @@ typedef struct s_token
 	int				expansion_cnt;
 	int				expansion_idx;
 	int				flag;
+	int				remain_idx;
 	char			*value;
 	char			*expansion_fail;
 	struct s_token	*next;
@@ -242,7 +244,10 @@ char		*del_quote(t_token *token, char *tmp, int start, int *quote_cnt);
 int			cut_env_idx(t_token *token, char *value, int idx);
 char		*insert_envp(t_token *token, char *tmp, char *str, int start);
 int			new_expand(t_token *token, int start, int cut, t_bundle *bundle);
-void		split_after_expansion(t_token *token, char *str, char *new);
+void		split_after_expansion(t_token *token, char *str, char *new, \
+			char *remain);
+void		connect_remainder(char **split, int idx, char *remain, \
+			t_token *token);
 t_token		*traverse_str(char *str, t_token *token_head, int *len, int *type);
 t_token		*tokenize(char *str);
 

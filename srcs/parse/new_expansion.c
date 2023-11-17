@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   new_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 13:51:10 by hgu               #+#    #+#             */
-/*   Updated: 2023/11/15 15:34:35 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/17 15:45:05 by hgu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,23 @@ t_token	*delete_empty_token(t_token *head)
 	return (head);
 }
 
-void	split_after_expansion(t_token *token, char *str, char *new)
+void	connect_remainder(char **split, int idx, char *remain, t_token *token)
 {
-	int		idx;
-	char	**split;
-	t_token	*next;
-	t_token	*tmp;
+	int		len;
+	char	*tmp;
 
-	split = ft_split(str, ' ');
-	next = token->next;
-	token->next = NULL;
-	tmp = token;
-	idx = -1;
-	while (split[++idx])
-	{
-		if (idx == 0 && str[0] != ' ')
-			ft_strlcat(new, split[0], ft_strlen(new) + ft_strlen(split[0]) + 2);
-		else
-		{
-			make_token(split[idx], ft_strlen(split[idx]), -1, &token);
-			tmp = tmp->next;
-		}
-		free(split[idx]);
-	}
-	free(split);
-	tmp->next = next;
+	if (split[idx + 1] == NULL)
+		len = ft_strlen(split[idx]);
+	else
+		return ;
+	len += ft_strlen(remain) - token->remain_idx;
+	tmp = (char *)malloc(len + 1);
+	if (tmp == NULL)
+		ft_error(MALLOC_ERRMSG, 1);
+	ft_strlcpy(tmp, split[idx], len + 1);
+	ft_strlcat(tmp, remain + token->remain_idx, len + 2);
+	free(split[idx]);
+	split[idx] = tmp;
 }
 
 int	new_expand(t_token *token, int start, int cut, t_bundle *bundle)

@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 20:07:20 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/16 11:19:34 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/17 16:35:24 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,7 @@ t_pipe	*parsing(t_bundle *bundle, char *rl)
 	token_head = tokenize(rl);
 	temp = syntax_analyze(token_head);
 	if (!temp)
-	{
-		write(2, "syntax error\n", 13);
 		return (NULL);
-	}
 	expansion_main(token_head, bundle);
 	make_tree_tmp = token_head->next;
 	root = make_tree(bundle, make_tree_tmp);

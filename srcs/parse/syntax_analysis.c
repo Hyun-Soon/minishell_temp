@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:50:39 by hgu               #+#    #+#             */
-/*   Updated: 2023/11/16 13:28:38 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/17 16:12:10 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	syntax_error(char *str)
 	write(2, "bash: syntax error near unexpected token `", 42);
 	write(2, str, ft_strlen(str));
 	write(2, "\'\n", 2);
-	g_exit_status = 248;
+	g_exit_status = 258;
 	return (-1);
 }
 

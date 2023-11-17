@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 15:35:43 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/15 15:37:26 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/17 15:38:10 by hgu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ t_token	*traverse_str(char *str, t_token *token_head, int *len, int *type)
 		if (*type == S_QUOTATION || *type == D_QUOTATION)
 			*len = jump_quote(str, *len);
 		if (*len == -1)
+		{
+			write(STDERR_FILENO, "quote error\n", 12);
 			return (free_all_token(token_head));
+		}
 		if (*type == WHITE_SPACE)
 		{
 			str++;

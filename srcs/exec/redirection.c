@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 20:25:40 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/16 14:23:21 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/17 16:34:53 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,6 @@ int	redir_two_right(char *filename)
 	int	outfile_fd;
 	int	open_flag;
 
-	if (access(filename, F_OK))
-	{
-		write(2, filename, ft_strlen(filename));
-		write(2, ": No such file or directory\n", 28);
-		exit(1);
-	}
 	open_flag = O_RDWR | O_CREAT | O_APPEND;
 	outfile_fd = open(filename, open_flag, 0644);
 	if (outfile_fd == -1)

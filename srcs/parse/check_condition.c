@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_condition.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 15:15:57 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/15 15:19:37 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/17 15:43:05 by hgu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,13 @@ void	case_not_find_in_envp(t_token *token, int start, int cut)
 	return ;
 }
 
+int	set_len(char *str)
+{
+	if (str[0] == ' ')
+		return (0);
+	return (ft_strlen(str));
+}
+
 int	case_find_in_envp(t_token *token, char *envp, int start, int cut)
 {
 	char	*tmp;
@@ -66,25 +73,15 @@ int	case_find_in_envp(t_token *token, char *envp, int start, int cut)
 	token->expansion_cnt++;
 	str = envp + cut - start + 1;
 	quote_cnt = 0;
-	len = ft_strlen(str);
+	len = set_len(str);
 	tmp = malloc(ft_strlen(token->value));
 	if (tmp == NULL)
 		ft_error(MALLOC_ERRMSG, 1);
 	ft_strlcpy(tmp, token->value, start + 1);
+	token->remain_idx = ft_strlen(tmp);
 	ft_strlcat(tmp, token->value + cut + 1, ft_strlen(token->value));
 	tmp = del_quote(token, tmp, start, &quote_cnt);
 	free(token->value);
 	token->value = insert_envp(token, tmp, str, start - quote_cnt);
 	return (start + len - 1 - quote_cnt);
-}
-
-int	expansion_separator(char ch)
-{
-	if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'))
-		return (0);
-	else if (ch >= '0' && ch <= '9')
-		return (0);
-	else if (ch == '_')
-		return (0);
-	return (1);
 }
