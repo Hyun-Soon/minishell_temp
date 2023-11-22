@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 22:18:03 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/16 12:13:12 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/20 15:01:19 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,15 @@ int	env(t_bundle *bundle)
 	return (0);
 }
 
-void	ft_exit(char **cmd_argv)
+void	ft_exit(char **cmd_argv, int cmd_argv_size)
 {
 	int	atoi_ret;
-	int	cmd_argv_size;
 
-	cmd_argv_size = -1;
 	atoi_ret = 0;
 	while (cmd_argv[++cmd_argv_size])
 		;
+	if (cmd_argv_size == 1)
+		exit(g_exit_status);
 	if (cmd_argv_size > 2)
 	{
 		if (write(2, "exit: too many arguments\n", 25) == -1)

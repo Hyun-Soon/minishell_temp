@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 14:48:13 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/17 15:53:04 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/20 15:01:51 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ int			search_here_doc(t_redirect_s *redirect_s,
 				t_bundle *bundle, t_list_hrdc *new);
 int			exec_here_doc(char *eof, t_bundle *bundle);
 int			write_to_tempfile_until_eof(char *eof, int tempfile_fd);
-void		ft_exit(char **cmd_argv);
+void		ft_exit(char **cmd_argv, int cmd_argv_size);
 int			env(t_bundle *bundle);
 void		rm_inp_env_var(t_bundle *bundle, int found_idx);
 size_t		ft_env_var_len(const char *s);
@@ -201,6 +201,7 @@ int			err_in_cd(char *dest);
 void		err_in_export(char *str);
 void		exec_with_new_path(char **parsed_path,
 				int idx, t_simple_cmd *simple_cmd, t_bundle *bundle);
+void		reset_base_fd(int bf_stdin, int bf_stdout);
 
 t_token		*syntax_analyze(t_token *token_head);
 t_pipe		*make_tree(t_bundle *bundle, t_token *tmp);
@@ -244,11 +245,14 @@ char		*del_quote(t_token *token, char *tmp, int start, int *quote_cnt);
 int			cut_env_idx(t_token *token, char *value, int idx);
 char		*insert_envp(t_token *token, char *tmp, char *str, int start);
 int			new_expand(t_token *token, int start, int cut, t_bundle *bundle);
-void		split_after_expansion(t_token *token, char *str, char *new, \
+int			split_after_expansion(t_token *token, char *str, char *new, \
 			char *remain);
 void		connect_remainder(char **split, int idx, char *remain, \
 			t_token *token);
 t_token		*traverse_str(char *str, t_token *token_head, int *len, int *type);
 t_token		*tokenize(char *str);
+void		init_split_expansion(int *num, t_token *token, t_token **next);
+void		null_guard(void *temp);
+char		*reconnect_token(t_token *token, char *new, char *tmp);
 
 #endif

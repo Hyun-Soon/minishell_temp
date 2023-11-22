@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 20:07:20 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/17 16:35:24 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/20 15:00:04 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	exec_builtin(char *cmd_name, char **cmd_argv, t_bundle *bundle)
 	if (ft_strlen(cmd_name) == 3 && !ft_strcmp(cmd_name, "env"))
 		return (env(bundle));
 	if (ft_strlen(cmd_name) == 4 && !ft_strcmp(cmd_name, "exit"))
-		ft_exit(cmd_argv);
+		ft_exit(cmd_argv, -1);
 	return (1);
 }
 
@@ -80,20 +80,20 @@ int	exec_one_builtin(t_bundle *bundle, t_pipe *root)
 		before_stdout = dup(STDOUT_FILENO);
 		if (pre_exec_here_doc(root, bundle) == -1)
 		{
-			dup2(before_stdin, STDIN_FILENO);
-			dup2(before_stdout, STDOUT_FILENO);
+			reset_base_fd(before_stdin, before_stdout);
 			return (-1);
 		}
 		if (exec_redirect_s_recur(root->cmd->redirect_s, bundle) == -1)
+		{
+			if (root->cmd->redirect_s)
+				reset_base_fd(before_stdin, before_stdout);
 			return (-1);
+		}
 	}
 	g_exit_status = exec_builtin(root->cmd->simple_cmd->cmd_path,
 			root->cmd->simple_cmd->cmd_argv, bundle);
 	if (root->cmd->redirect_s)
-	{
-		dup2(before_stdin, STDIN_FILENO);
-		dup2(before_stdout, STDOUT_FILENO);
-	}
+		reset_base_fd(before_stdin, before_stdout);
 	return (0);
 }
 

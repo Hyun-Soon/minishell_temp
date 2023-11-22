@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_condition.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 15:15:57 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/17 15:43:05 by hgu              ###   ########.fr       */
+/*   Updated: 2023/11/17 22:50:36 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,20 +68,24 @@ int	case_find_in_envp(t_token *token, char *envp, int start, int cut)
 	char	*tmp;
 	char	*str;
 	int		quote_cnt;
-	int		len;
+	int		len[2];
 
+	len[1] = 0;
 	token->expansion_cnt++;
 	str = envp + cut - start + 1;
 	quote_cnt = 0;
-	len = set_len(str);
+	len[0] = set_len(str);
 	tmp = malloc(ft_strlen(token->value));
-	if (tmp == NULL)
-		ft_error(MALLOC_ERRMSG, 1);
+	null_guard(tmp);
 	ft_strlcpy(tmp, token->value, start + 1);
 	token->remain_idx = ft_strlen(tmp);
 	ft_strlcat(tmp, token->value + cut + 1, ft_strlen(token->value));
 	tmp = del_quote(token, tmp, start, &quote_cnt);
 	free(token->value);
 	token->value = insert_envp(token, tmp, str, start - quote_cnt);
-	return (start + len - 1 - quote_cnt);
+	while (str[ft_strlen(str) - len[1] - 1] == ' ')
+		len[1]++;
+	if (str[ft_strlen(str) - 1] == ' ')
+		return (start + len[0] - quote_cnt - len[1]);
+	return (start + len[0] - 1 - quote_cnt);
 }

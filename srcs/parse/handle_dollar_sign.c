@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 15:21:02 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/15 15:25:08 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/21 23:34:35 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ int	dollar_with_separator(t_token *token, int idx)
 	char	*tmp;
 	int		len;
 
-	if (token->value[idx + 1] == '\'' || token->value[idx + 1] == '\"')
+	if (token->flag == 1 && (token->value[idx + 1] == '\'' || token->value[idx + 1] == '\"'))
 		return (dollar_with_quote(token, idx + 1));
 	else if (token->value[idx + 1] == '$')
 		return (dollar_with_dollar(token, idx));
 	else if (token->value[idx + 1] == '?')
 		return (dollar_with_question_mark(token, idx));
+	else if (token->value[idx + 1] == '\'')
+		return (idx);
 	len = ft_strlen(token->value);
 	tmp = malloc(len);
 	if (tmp == NULL)

@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 16:14:06 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/08 22:27:23 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/20 14:58:05 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,26 @@ void	cp_envp(t_bundle *bundle, char *envp[])
 	}
 	bundle->envp = malloced_envp;
 	bundle->envp_len = envp_len;
+}
+
+void	init_split_expansion(int *num, t_token *token, t_token **next)
+{
+	num[0] = -1;
+	num[1] = 0;
+	*next = token->next;
+	token->next = NULL;
+}
+
+void	null_guard(void *temp)
+{
+	if (temp == NULL)
+		ft_error(MALLOC_ERRMSG, 1);
+}
+
+void	reset_base_fd(int bf_stdin, int bf_stdout)
+{
+	dup2(bf_stdin, STDIN_FILENO);
+	dup2(bf_stdout, STDOUT_FILENO);
+	close(bf_stdin);
+	close(bf_stdout);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/15 15:35:43 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/17 15:38:10 by hgu              ###   ########.fr       */
+/*   Updated: 2023/11/20 19:48:36 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ t_token	*tokenize(char *str)
 		return (NULL);
 	if (type != WHITE_SPACE && len != 0)
 		make_token(str, --len, type, &token_head);
+	if (token_head->next == NULL)
+		return (free_all_token(token_head));
 	return (token_head);
 }
 
@@ -55,4 +57,20 @@ t_token	*traverse_str(char *str, t_token *token_head, int *len, int *type)
 		}
 	}
 	return (token_head);
+}
+
+char	*reconnect_token(t_token *token, char *new, char *tmp)
+{
+	t_token	*next;
+	char	*next_value;
+
+	free(tmp);
+	next = token->next;
+	if (next == NULL)
+		return (new);
+	next_value = next->value;
+	token->next = next->next;
+	free(new);
+	free(next);
+	return (next_value);
 }

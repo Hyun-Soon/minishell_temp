@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   new_expansion.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hgu <hgu@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 13:51:10 by hgu               #+#    #+#             */
-/*   Updated: 2023/11/17 15:45:05 by hgu              ###   ########.fr       */
+/*   Updated: 2023/11/17 22:51:05 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ void	connect_remainder(char **split, int idx, char *remain, t_token *token)
 	char	*tmp;
 
 	if (split[idx + 1] == NULL)
+	{
 		len = ft_strlen(split[idx]);
+	}
 	else
 		return ;
 	len += ft_strlen(remain) - token->remain_idx;

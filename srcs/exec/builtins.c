@@ -6,7 +6,7 @@
 /*   By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 21:11:37 by hyuim             #+#    #+#             */
-/*   Updated: 2023/11/14 20:34:35 by hyuim            ###   ########.fr       */
+/*   Updated: 2023/11/20 14:47:26 by hyuim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,8 @@ int	unset(t_bundle *bundle, char **cmd_argv)
 	{
 		if (check_exeception(cmd_argv[idx]) == -1)
 			err_flag = 1;
-		else if (ft_strlen(cmd_argv[idx]) >= 1 && cmd_argv[idx][0] == '_')
+		else if (ft_strlen(cmd_argv[idx]) >= 2
+			&& cmd_argv[idx][0] == '_' && cmd_argv[idx][1] == '=')
 			continue ;
 		else
 		{
