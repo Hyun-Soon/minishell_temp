@@ -1,80 +1,73 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: hyuim <hyuim@student.42.fr>                +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/04/05 15:14:10 by hyuim             #+#    #+#              #
-#    Updated: 2023/11/17 15:58:39 by hyuim            ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+#-------------------------------------------
 
-EXEC_SRCS_NAME =	main.c \
-			search_tree.c \
-			init.c \
-			here_doc.c \
-			builtins.c \
-			check_before_exec.c \
-			free_tree.c \
-			free_bundle.c \
-			redirection.c \
-			base_redir.c \
-			handle_error.c \
-			handle_envp.c \
-			signal_handler.c \
-			execution.c \
-			setting.c \
-			heredoc_signal_handler.c \
-			write_to_tempfile.c \
-			errs_in_builtin.c \
-			support_builtin.c \
-			builtins_part2.c
+BLACK       =   "\033[0;30m"
+GRAY        =   "\033[1;30m"
+RED         =   "\033[1;31m"
+GREEN       =   "\033[0;32m"
+YELLOW      =   "\033[1;33m"
+PURPLE      =   "\033[0;35m"
+CYAN        =   "\033[1;36m"
+WHITE       =   "\033[1;37m"
+EOC         =   "\033[0;0m"
+LINE_CLEAR  =   "\x1b[1A\x1b[M"
 
-PARSE_SRCS_NAME = syntax_analysis.c \
-				make_tree.c \
-				tokenize_no_space.c \
-				new_expansion.c \
-				delete_quote.c \
-				make_nodes.c \
-				check_condition.c \
-				handle_dollar_sign.c \
-				handle_quote.c \
-				handle_env.c \
-				tokenizer.c
+#-------------------------------------------
 
-EXEC_OBJS = $(EXEC_SRCS:.c=.o)
-PARSE_OBJS = $(PARSE_SRCS:.c=.o)
-EXEC_PREFIX = ./srcs/exec/
-PARSE_PREFIX = ./srcs/parse/
-EXEC_SRCS = $(addprefix $(EXEC_PREFIX), $(EXEC_SRCS_NAME))
-PARSE_SRCS = $(addprefix $(PARSE_PREFIX), $(PARSE_SRCS_NAME))
+NAME = miniRT
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -c
-HEADER = ./headers
-NAME = minishell
+MLX = -lmlx -framework OpenGL -framework Appkit
+CFLAGS = -I./include  -Wall -Wextra -Werror -Wall -Wextra -Werror
+SRCS = ./src/main.c \
+		./src/vec3_utils.c \
+		./src/vec3_ari_ops.c \
+		./src/vec3_rotation.c \
+		./src/vec3_vec_ops.c \
+		./src/ray.c \
+		./src/object_create.c \
+		./src/object_create2.c \
+		./src/normal.c \
+		./src/object_utils.c \
+		./src/phong_lighting.c \
+		./src/map_parse.c \
+		./src/map_parse_objs.c \
+		./src/print.c \
+		./src/key_hook.c \
+		./src/parse_utils.c \
+		./src/parse_utils2.c \
+		./src/hit/hit.c \
+		./src/hit/hit_sphere.c \
+		./src/hit/hit_plane.c \
+		./src/hit/hit_cone.c \
+		./src/hit/hit_cylinder.c \
+		./src/hit/hit_checkerboard.c \
 
-LIBFT = ft
+OBJS = $(SRCS:.c=.o)
+LIBFT = ./libft/libft.a
 
 all : $(NAME)
 
+$(NAME) : $(LIBFT) $(OBJS)
+	@$(CC) $(CFLAGS) $(MLX) -o $(NAME) $^
+	@echo $(GREEN)"\n==========================================================\n"$(EOC)
+	@echo $(YELLOW)"                    miniRT is ready"$(EOC)
+	@echo $(GREEN)"\n==========================================================\n"$(EOC)
 
-$(NAME) : $(EXEC_OBJS) $(PARSE_OBJS)
-	cd libft; make; cd ..
-	$(CC) $(EXEC_OBJS) $(PARSE_OBJS) -Llibft -l$(LIBFT) -L/usr/local/include/readline -lreadline -o $(NAME) -I $(HEADER) #-g3 -fsanitize=address
+$(LIBFT) :
+	@cd libft ; $(MAKE)
 
 %.o : %.c
-	$(CC) $(CFLAGS) $< -o $@ -I $(HEADER)
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean :
-	cd libft; make clean; cd ..
-	rm -f $(EXEC_OBJS) $(PARSE_OBJS)
+	rm -f $(OBJS)
+	cd libft ; $(MAKE) clean
 
 fclean : clean
-	cd libft; make fclean; cd ..
 	rm -f $(NAME)
+	cd libft ; $(MAKE) fclean
 
-re : fclean all
+re :
+	$(MAKE) fclean
+	$(MAKE) all
 
-
-.PHONY : clean fclean re
+.PHONY : all bonus clean fclean re
